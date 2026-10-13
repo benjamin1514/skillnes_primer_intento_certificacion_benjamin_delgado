@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CinePedia - Ver Película</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="/cine">Inicio</a>
+            <a href="/logout">Cerrar Sesión</a>
+        </nav>
+    </header>
+    <main>
+        <article>
+            <h1>{{ pelicula.titulo }}</h1>
+            <p><strong>Publicado por:</strong> {{ pelicula.usuario_nombre }}</p>
+            <p><strong>Director:</strong> {{ pelicula.director }}</p>
+            <p><strong>Fecha:</strong> {{ pelicula.fecha_estreno.strftime('%Y-%m-%d') }}</p>
+            <p><strong>Sinopsis:</strong> {{ pelicula.sinopsis }}</p>
+        </article>
+
+        <section>
+            {% if pelicula.id_usuario != session['usuario_id'] %}
+            <form action="/comentarios/nuevo" method="POST">
+                <input type="hidden" name="id_pelicula" value="{{ pelicula.id_pelicula }}">
+                <input type="text" name="comentario" placeholder="Escribe un comentario..." maxlength="200" required>
+                <button type="submit">Enviar</button>
+            </form>
+            {% endif %}
+
+            <div>
+                {% for comentario in comentarios %}
+                <div>
+                    <p><strong>{{ comentario.usuario_nombre }} - {{ comentario.created_at.strftime('%d de %B')
+                            }}</strong></p>
+                    <p>{{ comentario.comentario }}</p>
+                    {% if comentario.id_usuario == session['usuario_id'] %}
+                    <form action="/comentarios/borrar/{{ comentario.id_comentario }}" method="POST"
+                        style="display:inline;">
+                        <button type="submit">Borrar</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

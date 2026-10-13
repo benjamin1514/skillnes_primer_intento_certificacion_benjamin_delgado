@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CinePedia - Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>CinePedia</h1>
+        <nav>
+            <a href="/cine/nueva">Nueva Peli</a>
+            <a href="/logout">Cerrar Sesión</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Bienvenido, {{ session['usuario_nombre'] }}</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Película</th>
+                    <th>Director</th>
+                    <th>Fecha de Estreno</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pelicula in peliculas %}
+                <tr>
+                    <td>{{ pelicula.titulo }}</td>
+                    <td>{{ pelicula.director }}</td>
+                    <td>{{ pelicula.fecha_estreno.strftime('%Y-%m-%d') if pelicula.fecha_estreno else '' }}</td>
+                    <td>
+                        <a href="/cine/{{ pelicula.id_pelicula }}">Ver</a>
+                        {% if pelicula.id_usuario == session['usuario_id'] %}
+                            <a href="/cine/editar/{{ pelicula.id_pelicula }}">Editar</a>
+                            <form action="/cine/borrar/{{ pelicula.id_pelicula }}" method="POST" style="display:inline;">
+                                <button type="submit">Borrar</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>

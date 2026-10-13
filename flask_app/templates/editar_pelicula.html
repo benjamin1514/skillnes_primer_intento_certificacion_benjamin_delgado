@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CinePedia - Editar Película</title>
+</head>
+
+<body>
+    <header>
+        <h1>Editar Película</h1>
+        <nav>
+            <a href="/cine">Inicio</a>
+            <a href="/logout">Cerrar Sesión</a>
+        </nav>
+    </header>
+    <main>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <p style="color:red;">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form action="/cine/editar/{{ pelicula.id_pelicula }}" method="POST">
+            <div>
+                <label for="titulo">Nombre de Peli:</label>
+                <input type="text" id="titulo" name="titulo"
+                    value="{{ form_data.titulo if form_data else pelicula.titulo }}" minlength="3" required>
+            </div>
+            <div>
+                <label for="director">Director:</label>
+                <input type="text" id="director" name="director"
+                    value="{{ form_data.director if form_data else pelicula.director }}" minlength="3" required>
+            </div>
+            <div>
+                <label for="fecha_estreno">Fecha Estreno:</label>
+                <input type="date" id="fecha_estreno" name="fecha_estreno"
+                    value="{{ form_data.fecha_estreno if form_data else pelicula.fecha_estreno.strftime('%Y-%m-%d') }}"
+                    required>
+            </div>
+            <div>
+                <label for="sinopsis">Sinopsis:</label>
+                <textarea id="sinopsis" name="sinopsis" minlength="3"
+                    required>{{ form_data.sinopsis if form_data else pelicula.sinopsis }}</textarea>
+            </div>
+            <div>
+                <button type="submit">Guardar Película</button>
+            </div>
+        </form>
+    </main>
+</body>
+
+</html>
