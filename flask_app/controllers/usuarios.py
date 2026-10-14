@@ -5,14 +5,15 @@ from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt(app)
 
-
+# redirigue al template de login
 @app.route("/")
 def index():
     if "id_usuario" in session:
         return redirect("/cine")
     return render_template("index.html")
 
-
+# permite registrar un usuario, si no llena los campos le muestra un mensaje de que todos los campos son obligatorios
+#  y si el correo ya esta registrado le muestra un mensaje 
 @app.route("/registro", methods=["POST"])
 def registro():
     if not Usuario.validar_usuario(request.form):
@@ -38,7 +39,8 @@ def registro():
 
     return redirect("/cine")
 
-
+# permite iniciar sesion, si no llena los campos le muestra un mensaje de que todos los campos son obligatorios 
+# y se equivoca en la contraseña o en email manda error
 @app.route("/login", methods=["POST"])
 def login():
     usuario = Usuario.get_by_email(request.form["email"])
@@ -53,7 +55,7 @@ def login():
 
     return redirect("/cine")
 
-
+# permite cerrar sesion y redirige al login
 @app.route("/logout")
 def logout():
     session.clear()

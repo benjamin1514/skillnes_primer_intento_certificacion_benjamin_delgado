@@ -3,7 +3,7 @@ from flask_app import app
 from flask_app.models.pelicula import Pelicula
 from flask_app.models.comentario import Comentario
 
-
+# redirige al template dashboard y si no esta logueado lo manda al login
 @app.route("/cine")
 def dashboard():
     if "id_usuario" not in session:
@@ -12,7 +12,7 @@ def dashboard():
     peliculas = Pelicula.get_all()
     return render_template("dashboard.html", peliculas=peliculas)
 
-
+# redirige al template de nueva pelicula y si no lo manda a loguin
 @app.route("/cine/nueva")
 def nueva_pelicula_vista():
     if "id_usuario" not in session:
@@ -20,7 +20,7 @@ def nueva_pelicula_vista():
 
     return render_template("nueva_pelicula.html")
 
-
+# manda al template de nueva pelicula y si no llena los campos le muestra un mensaje de que todos los campos son obligatorios
 @app.route("/cine/nueva", methods=["POST"])
 def crear_pelicula():
     if "id_usuario" not in session:
@@ -47,7 +47,7 @@ def crear_pelicula():
     Pelicula.save(data)
     return redirect("/cine")
 
-
+# permite ver la pelicula y sus comentarios
 @app.route("/cine/<int:id>")
 def ver_pelicula(id):
     if "id_usuario" not in session:
@@ -62,7 +62,7 @@ def ver_pelicula(id):
         "ver_pelicula.html", pelicula=pelicula, comentarios=comentarios
     )
 
-
+# permite editar la pelicula y si no es el creador de la pelicula lo manda al dashboard
 @app.route("/cine/editar/<int:id>")
 def editar_pelicula_vista(id):
     if "id_usuario" not in session:
@@ -74,7 +74,7 @@ def editar_pelicula_vista(id):
 
     return render_template("editar_pelicula.html", pelicula=pelicula)
 
-
+# permite actualizar la pelicula 
 @app.route("/cine/editar/<int:id>", methods=["POST"])
 def actualizar_pelicula(id):
     if "id_usuario" not in session:
@@ -108,7 +108,7 @@ def actualizar_pelicula(id):
     Pelicula.update(data) if hasattr(Pelicula, "update") else None
     return redirect("/cine")
 
-
+# permite eliminar peliculas, siempre que sea el creador
 @app.route("/cine/borrar/<int:id>", methods=["POST"])
 def eliminar_pelicula(id):
     if "id_usuario" not in session:

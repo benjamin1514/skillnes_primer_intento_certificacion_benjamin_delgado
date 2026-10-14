@@ -3,6 +3,8 @@ from flask import flash
 import re
 
 email_regex = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+nombre_regex = re.compile(r'^[a-zA-Z]+$')
+apellido_regex = re.compile(r'^[a-zA-Z]+$')
 
 class Usuario:
     def __init__(self, data):
@@ -14,14 +16,15 @@ class Usuario:
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
 
+    # valida los datos del usuario, si no cumple con los requisitos manda un mensaje de error
     @staticmethod
     def validar_usuario(usuario):
         is_valid = True
-        if len(usuario['nombre']) < 2:
-            flash("El nombre debe tener al menos 2 caracteres.", "error_nombre")
+        if not nombre_regex.match(usuario['nombre']):
+            flash("El nombre solo puede contener letras.", "error_nombre")
             is_valid = False
-        if len(usuario['apellido']) < 2:
-            flash("El apellido debe tener al menos 2 caracteres.", "error_apellido")
+        if not apellido_regex.match(usuario['apellido']):
+            flash("El apellido solo puede contener letras.", "error_apellido")
             is_valid = False
         if not email_regex.match(usuario['email']):
             flash("Correo electrónico inválido.", "error_email")
@@ -34,6 +37,7 @@ class Usuario:
             is_valid = False
         return is_valid
 
+    # permite guardar un usuario en la base de datos
     @classmethod
     def save(cls, data):
         query = """
@@ -42,6 +46,7 @@ class Usuario:
         """
         return connectToMySQL('CinePedia').query_db(query, data)
 
+    # permite obtener un usuario por su correo electrónico
     @classmethod
     def get_by_email(cls, email):
         query = "SELECT * FROM usuarios WHERE email = %(email)s;"
@@ -50,6 +55,7 @@ class Usuario:
             return cls(result[0])
         return None
 
+    # permite obtener un usuario por su id
     @classmethod
     def get_by_id(cls, id):
         query = "SELECT * FROM usuarios WHERE id_usuario = %(id_usuario)s;"

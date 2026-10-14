@@ -1,6 +1,6 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 
-
+# se crea la clase Pelicula
 class Pelicula:
 
     def __init__(self, data):
@@ -13,6 +13,7 @@ class Pelicula:
         self.updated_at = data["updated_at"]
         self.id_usuario = data["id_usuario"]
 
+    # guarda las peliculas en la base de datos 
     @classmethod
     def save(cls, data):
         query = """
@@ -21,6 +22,7 @@ class Pelicula:
         """
         return connectToMySQL("CinePedia").query_db(query, data)
 
+    # obtiene todas las peliculas de la base de datos
     @classmethod
     def get_all(cls):
         query = "SELECT * FROM peliculas;"
@@ -31,6 +33,7 @@ class Pelicula:
                 peliculas.append(cls(row))
         return peliculas
 
+    # obtiene una pelicula por su id y el nombre del usuario que la creo
     @classmethod
     def get_by_id(cls, id):
         query = """
@@ -48,6 +51,7 @@ class Pelicula:
             return pelicula
         return None
 
+    # permite actualizar la pelicula, solo si es el creador de la misma
     @classmethod
     def update(cls, data):
         query = """
@@ -57,6 +61,7 @@ class Pelicula:
         """
         return connectToMySQL("CinePedia").query_db(query, data)
 
+    # permite eliminar peliculas, solo si es el creador de la misma
     @classmethod
     def delete(cls, id):
         query = "DELETE FROM peliculas WHERE id_pelicula = %(id_pelicula)s;"

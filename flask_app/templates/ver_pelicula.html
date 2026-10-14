@@ -37,12 +37,13 @@
             <div>
                 {% for comentario in comentarios %}
                 <div>
-                    <p><strong>{{ comentario.usuario_nombre }} - {{ comentario.created_at.strftime('%d de %B')
-                            }}</strong></p>
+                    <p><strong>{{ comentario.usuario_nombre }} - {{ comentario.created_at.strftime('%d de %B') if
+                            comentario.created_at else '' }}</strong></p>
                     <p>{{ comentario.comentario }}</p>
-                    {% if comentario.id_usuario == session['usuario_id'] %}
+                    {% if comentario.id_usuario|int == session['id_usuario']|int %}
                     <form action="/comentarios/borrar/{{ comentario.id_comentario }}" method="POST"
                         style="display:inline;">
+                        <input type="hidden" name="id_pelicula" value="{{ pelicula.id_pelicula }}">
                         <button type="submit">Borrar</button>
                     </form>
                     {% endif %}

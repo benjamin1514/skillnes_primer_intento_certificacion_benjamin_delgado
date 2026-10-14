@@ -3,7 +3,7 @@ from flask_app import app
 from flask_app.models.comentario import Comentario
 from flask_app.models.pelicula import Pelicula
 
-
+# permite crear comentarios para una pelicula específica, siempre que el usuario este logueado y el creador no puede hacer comentarios
 @app.route("/comentarios/nuevo", methods=["POST"])
 def crear_comentario():
     if "id_usuario" not in session:
@@ -28,6 +28,7 @@ def crear_comentario():
     return redirect(f"/cine/{id_pelicula}")
 
 
+# permite eliminar comentarios, cuando este logueado y sea el creador del comentario
 @app.route("/comentarios/borrar/<int:id>", methods=["POST"])
 def eliminar_comentario(id):
     if "id_usuario" not in session:
