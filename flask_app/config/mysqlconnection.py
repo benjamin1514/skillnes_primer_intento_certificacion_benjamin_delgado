@@ -1,33 +1,31 @@
-import pymysql.cursors
 import os
+import pymysql.cursors
 from dotenv import load_dotenv
 
-# Variables de entorno
 load_dotenv()
 
-# CLASE DE CONEXIÓN MYSQL
 
 class MySQLConnection:
+
     def __init__(self, db):
         connection = pymysql.connect(
-            host=os.environ.get('MYSQL_HOST'),
-            user=os.environ.get('MYSQL_USER'),
-            password=os.environ.get('MYSQL_PASSWORD'),
+            host=os.environ.get("MYSQL_HOST"),
+            user=os.environ.get("MYSQL_USER"),
+            password=os.environ.get("MYSQL_PASSWORD"),
             db=db,
-            charset='utf8mb4',
+            charset="utf8mb4",
             cursorclass=pymysql.cursors.DictCursor,
-            autocommit=True
+            autocommit=True,
         )
         self.connection = connection
 
-    # MÉTODO PARA REALIZAR LAS CONSULTAS
     def query_db(self, query, data=None):
         with self.connection.cursor() as cursor:
             try:
                 query = cursor.mogrify(query, data)
                 print(f"Ejecutando Consulta: {query}")
                 cursor.execute(query, data)
-                
+
                 if query.lower().find("insert") >= 0:
                     self.connection.commit()
                     return cursor.lastrowid
@@ -43,6 +41,9 @@ class MySQLConnection:
                 self.connection.close()
 
 
-# INSTANCIACIÓN
+def connectToMySQL(db):
+    return MySQLConnection(db)
+
+
 def connect_to_mysql(db):
     return MySQLConnection(db)
