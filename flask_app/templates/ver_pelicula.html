@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CinePedia - Ver Película</title>
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ver_pelicula.css') }}">
 </head>
 
 <body>
@@ -20,7 +20,8 @@
             <h1>{{ pelicula.titulo }}</h1>
             <p><strong>Publicado por:</strong> {{ pelicula.usuario_nombre }}</p>
             <p><strong>Director:</strong> {{ pelicula.director }}</p>
-            <p><strong>Fecha:</strong> {{ pelicula.fecha_estreno.strftime('%Y-%m-%d') }}</p>
+            <p><strong>Fecha:</strong> {{ pelicula.fecha_estreno.strftime('%Y-%m-%d') if pelicula.fecha_estreno else ''
+                }}</p>
             <p><strong>Sinopsis:</strong> {{ pelicula.sinopsis }}</p>
         </article>
 
